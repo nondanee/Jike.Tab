@@ -1,0 +1,191 @@
+:root{
+	--themeYellow: #FFE411;
+	--themeBlue: #03A9F4;
+	--themeBlueLight: #A1E2FF;
+	--footerHeight: 8.4rem;
+}
+
+html{
+	font-size: 62.5%;
+	font-family: "Noto Sans CJK SC";
+}
+
+html, body{
+	margin: 0;
+	width: 100%;
+	height: 100%;
+}
+
+body{
+	/*background-image: url(browser.png);*/
+	background-repeat: no-repeat;
+	background-position: center;
+	background-color: var(--themeYellow);
+	font-family: inherit;
+	/*background-size: cover;*/
+}
+
+
+@-webkit-keyframes slide {
+	0% {
+		height: 100%;
+	}
+	100% { 
+		height: calc(100% - var(--footerHeight));
+	}
+}
+
+.card{
+	display: flex;
+	width: 100%;
+	height: calc(100% - 8.4rem);
+	align-items: center;
+	justify-content: center;
+	background-color: white;
+	border-radius: 0 0 3.2rem 3.2rem;
+	position: relative;
+	z-index: 1;
+	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+	animation-name: slide; 
+	animation-duration: 0.4s;
+	animation-iteration-count: 1;
+	animation-delay: 0s;
+	animation-timing-function: ease-out;
+	overflow: hidden;
+}
+
+.card .content{
+	position: relative;
+	width: 70%
+/*	display: flex;
+	flex-direction: column;*/
+}
+.card .content .tag{
+	color: var(--themeBlue);
+	font-size: 2.6rem;
+	font-weight: bold;
+	padding: 0.4rem 1.6rem 0.4rem 1.2rem;
+	border-radius: 2.8rem;
+	background-color: rgba(0, 0, 0, 0.03);
+	display: inline-flex;
+	align-items: center;
+}
+.card .content .tag::before{
+	content: "";
+	width: 2.6rem;
+	height: 2.6rem;
+	margin-right: 0.5rem;
+	box-sizing: border-box;
+	border: 0.6rem solid var(--themeBlue);
+	background-color: var(--themeBlueLight);
+	border-radius: 50%;
+}
+
+.card .content .text{
+	font-size: 6.3rem;
+	font-weight: bold;
+	margin: 0.6rem 0;
+	color: #656565;
+}
+
+.card .content .author{
+	height: 4.8rem;
+	align-items: center;
+	font-size: 3.2rem;
+	font-weight: bold;
+	color: #AFAFAF;
+}
+.card .content .author::before,
+.card .content .author::after{
+	color: #D0D0D0;
+}
+.card .content .author::before{
+	content: "来自用户 ";
+}
+.card .content .author::after{
+	content: " · " attr(date);
+}
+
+.card .content .charm{
+	width: 9rem;
+	height: 3.2rem;
+	background-image: url(decoration.svg);
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+}
+
+.card .background{
+	position: absolute;
+	z-index: -1;
+	opacity: 0.06;
+	background-image: url(watermark.svg);
+	background-position: center top;
+	background-repeat: no-repeat;
+	background-size: contain;
+	width: 30%;
+	left: 52%;
+	top: -6%;
+	height: 90%;
+}
+
+.footer{
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	box-sizing: border-box;
+	height: var(--footerHeight);
+	padding: 0 3.2rem;
+	display: flex;
+}
+
+.footer .calendar{
+	display: flex;
+	align-items: center;
+	opacity: 0.4;
+	flex: auto;
+}
+
+.footer .calendar .day{
+	font-size: 4.8rem;
+	font-weight: bold;
+	display: flex;
+	align-items: center;
+}
+.footer .calendar .day::after{
+	content: "";
+	margin: 0 1.2rem;
+	width: 0.4rem;
+	height: 3.8rem;
+	background-color: black;
+	transform: rotate(18deg);
+}
+
+.footer .calendar .fortune::before{
+	content: attr(month);
+	margin-right: 0.6rem;
+}
+.footer .calendar .fortune{
+	font-size: 3.2rem;
+	font-weight: bold;
+}
+
+.footer .greeting{
+	margin: auto;
+	font-size: 2.4rem;
+	font-weight: bold;
+	opacity: 0.2;
+	display: flex;
+	align-items: center;
+}
+.footer .greeting::before{
+	content: "";
+	width: 3.2rem;
+	height: 3.2rem;
+	background-image: url(badge.svg);
+	background-repeat: no-repeat;
+	margin-right: 0.6rem;
+}
