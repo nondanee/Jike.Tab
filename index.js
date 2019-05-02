@@ -77,7 +77,7 @@ const squarePost = () => {
 		JSON.stringify({topicId: randomChoice(topics), limit: 20})
 	)
 	.then(body => JSON.parse(body))
-	.then(body => body.data.filter(message => message.content && message.content.length <= 100 && (message.content.match(/\n/g) || []).length <= 6))
+	.then(body => body.data.filter(message => message.content && message.content.length <= 100 && (message.content.match(/\n/g) || []).length <= 5))
 	.then(data => randomChoice(data))
 	.then(item => {
 		console.log(item)
@@ -91,11 +91,3 @@ const squarePost = () => {
 }
 
 Promise.all([squarePost(), dailyCard()])
-
-
-
-
-
-
-
-dailyCard().then(e => e)
