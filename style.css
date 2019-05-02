@@ -2,111 +2,131 @@
 	--themeYellow: #FFE411;
 	--themeBlue: #03A9F4;
 	--themeBlueLight: #A1E2FF;
-	--footerHeight: 8.4rem;
+	--themeGreyOne: #404040;
+	--themeGreyTwo: #808080;
+	--themeGreyThree: #BFBFBF;
+	--themeGreyFour: #DBDBDB;
+	--themeBlueGrey: #F0F3F5;
+	--themeBlueGreyDark: #DDE0E2;
+	--footerHeight: 5.6rem;
 }
 
 html{
 	font-size: 62.5%;
-	font-family: "Noto Sans CJK SC";
 }
 
 html, body{
 	margin: 0;
 	width: 100%;
 	height: 100%;
+	overflow: hidden;
 }
 
 body{
 	/*background-image: url(browser.png);*/
 	background-repeat: no-repeat;
 	background-position: center;
-	background-color: var(--themeYellow);
-	font-family: inherit;
 	/*background-size: cover;*/
+	/*background-color: var(--themeYellow);*/
+	font-family: "Microsoft YaHei", "Noto Sans CJK SC Regular", "Source Hans CJK SC";
+	display: flex;
+	flex-direction: column;
 }
 
-
-@-webkit-keyframes slide {
-	0% {
-		height: 100%;
-	}
-	100% { 
-		height: calc(100% - var(--footerHeight));
-	}
-}
-
-.card{
+.main{
 	display: flex;
 	width: 100%;
-	height: calc(100% - 8.4rem);
+	flex: auto;
 	align-items: center;
 	justify-content: center;
-	background-color: white;
-	border-radius: 0 0 3.2rem 3.2rem;
 	position: relative;
 	z-index: 1;
-	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-	animation-name: slide; 
-	animation-duration: 0.4s;
-	animation-iteration-count: 1;
-	animation-delay: 0s;
-	animation-timing-function: ease-out;
+	/*box-shadow: 0 0px 20px rgba(0, 0, 0, 0.2);*/
 	overflow: hidden;
 }
 
-.card .content{
+.content{
 	position: relative;
 	width: 70%
 /*	display: flex;
 	flex-direction: column;*/
 }
-.card .content .tag{
+.main .content .theme{
 	color: var(--themeBlue);
-	font-size: 2.6rem;
+	padding: 0 1.2rem 0 0.8rem;
+	height: 2.6rem;
+	font-size: 1.7rem;
 	font-weight: bold;
-	padding: 0.4rem 1.6rem 0.4rem 1.2rem;
 	border-radius: 2.8rem;
-	background-color: rgba(0, 0, 0, 0.03);
+	background-color: var(--themeBlueGrey);
 	display: inline-flex;
 	align-items: center;
+	cursor: pointer;
+	transition: all 0.2s linear;
+	user-select: none;
 }
-.card .content .tag::before{
+.main .content .theme::before{
 	content: "";
-	width: 2.6rem;
-	height: 2.6rem;
-	margin-right: 0.5rem;
+	width: 1.6rem;
+	height: 1.6rem;
+	margin-right: 0.4rem;
 	box-sizing: border-box;
-	border: 0.6rem solid var(--themeBlue);
+	border: 0.4rem solid var(--themeBlue);
 	background-color: var(--themeBlueLight);
 	border-radius: 50%;
+	flex: none;
+}
+.main .content .theme:hover{
+	background-color: var(--themeBlueGreyDark);
 }
 
-.card .content .text{
-	font-size: 6.3rem;
+.main .content .text{
+	font-size: 6rem;
 	font-weight: bold;
-	margin: 0.6rem 0;
-	color: #656565;
+	margin: 0.8rem 0;
+	color: var(--themeGreyOne);
 }
 
-.card .content .author{
-	height: 4.8rem;
+.main .content .post{
+	display: flex;
+	height: 4rem;
 	align-items: center;
-	font-size: 3.2rem;
+	font-size: 2.5rem;
+	color: var(--themeGreyTwo);
+}
+.main .content .post .mark{
+	color: var(--themeGreyFour);
 	font-weight: bold;
-	color: #AFAFAF;
+	margin: 0 0.4rem;
+	color: var(--themeYellow);
 }
-.card .content .author::before,
-.card .content .author::after{
-	color: #D0D0D0;
+.main .content .post .author{
+	position: relative;
+	overflow: hidden;
+	font-weight: bold;
 }
-.card .content .author::before{
-	content: "来自用户 ";
+.main .content .post .author::after{
+	content: "";
+	display: block;
+	position: absolute;
+	width: 100%;
+	bottom: 0rem;
+	height: 0.7rem;
+	/*background-color: var(--themeYellow);*/
+	z-index: -1;
 }
-.card .content .author::after{
-	content: " · " attr(date);
+.main .content .post .date{
+	color: var(--themeGreyFour);
+	margin-left: 0.6rem;
+}
+.main .content .post .date::before{
+	content: "(";
+}
+.main .content .post .date::after{
+	content: ")";
 }
 
-.card .content .charm{
+/*.main .content .charm{
 	width: 9rem;
 	height: 3.2rem;
 	background-image: url(decoration.svg);
@@ -116,9 +136,9 @@ body{
 	position: absolute;
 	bottom: 0;
 	right: 0;
-}
+}*/
 
-.card .background{
+.main .background{
 	position: absolute;
 	z-index: -1;
 	opacity: 0.06;
@@ -133,59 +153,48 @@ body{
 }
 
 .footer{
-	position: absolute;
-	bottom: 0;
-	width: 100%;
-	box-sizing: border-box;
 	height: var(--footerHeight);
-	padding: 0 3.2rem;
 	display: flex;
+	justify-content: center;
+}
+.footer .content{
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	border-top: 1px solid var(--themeBlueGrey);
+	box-sizing: border-box;
+	font-size: 1.8rem;
 }
 
 .footer .calendar{
+	position: relative;
 	display: flex;
 	align-items: center;
-	opacity: 0.4;
-	flex: auto;
-}
-
-.footer .calendar .day{
-	font-size: 4.8rem;
 	font-weight: bold;
-	display: flex;
-	align-items: center;
+	color: var(--themeGreyTwo);
 }
-.footer .calendar .day::after{
-	content: "";
-	margin: 0 1.2rem;
-	width: 0.4rem;
-	height: 3.8rem;
-	background-color: black;
-	transform: rotate(18deg);
-}
-
-.footer .calendar .fortune::before{
-	content: attr(month);
-	margin-right: 0.6rem;
-}
-.footer .calendar .fortune{
-	font-size: 3.2rem;
-	font-weight: bold;
-}
-
 .footer .greeting{
+	color: var(--themeGreyThree);
+}
+
+.footer .calendar .date{
+	margin-right: 0.8rem;
+}
+
+.footer .calendar .bubble{
+	position: absolute;
 	margin: auto;
-	font-size: 2.4rem;
-	font-weight: bold;
-	opacity: 0.2;
+	left: 0; right: 0;
+	top: -3.2rem;
+	color: var(--themeGreyOne);
+	background-color: var(--themeYellow);
+	height: 2.4rem;
+	border-radius: 2.4rem;
 	display: flex;
 	align-items: center;
+	justify-content: center;
+	opacity: 0;
 }
-.footer .greeting::before{
-	content: "";
-	width: 3.2rem;
-	height: 3.2rem;
-	background-image: url(badge.svg);
-	background-repeat: no-repeat;
-	margin-right: 0.6rem;
-}
+
+/*.footer .calendar::hover::before{}*/

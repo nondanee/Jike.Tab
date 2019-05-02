@@ -1,0 +1,101 @@
+const createElement = (tagName, className, innerHTML) => {
+	let element = document.createElement(tagName)
+	if(className) element.className = className
+	if(innerHTML) element.innerHTML = innerHTML
+	return element
+}
+
+const request = (method, url, headers, body) => new Promise((resolve, reject) => {
+	const xhr = new XMLHttpRequest()
+	xhr.onreadystatechange = () => {
+		if(xhr.readyState == 4){
+			xhr.status == 200 ? resolve(xhr.responseText) : reject(xhr.status)				
+		}
+	}
+	xhr.open(method, url, true)
+	Object.keys(headers).forEach(key => xhr.setRequestHeader(key, headers[key]))
+	xhr.send(body)
+})
+
+const getToken = () => new Promise(resolve => {
+	const onMessage = message => {
+		chrome.runtime.onMessage.removeListener(onMessage)
+		resolve(message.token)
+	}
+	chrome.runtime.sendMessage({call: 'token'})
+	chrome.runtime.onMessage.addListener(onMessage)
+}).then(token => token || refreshToken())
+
+const refreshToken = () => new Promise(resolve => {
+	const iframe = createElement('iframe')
+	iframe.src = 'https://web.okjike.com/feed'
+	iframe.style.display = 'none'
+	document.body.appendChild(iframe)
+	iframe.onload = () => {
+		iframe.parentNode.removeChild(iframe)
+		resolve()
+	}
+}).then(getToken)
+
+const dailyCard = () => {
+	const query = token => request('GET', 'https://app.jike.ruguoapp.com/1.0/dailyCards/list', {'x-jike-access-token': token})
+	return Promise.resolve()
+	.then(() => getToken().then(query))
+	.catch(() => refreshToken().then(query))
+	.then(body => JSON.parse(body))
+	.then(body => body.data.cards[0])
+	.then(item => {
+		console.log(item)
+
+		let footer = document.getElementsByClassName('footer')[0]
+		footer.getElementsByClassName('date')[0].innerHTML = item.date.replace(/-0*/g, '/')
+		footer.getElementsByClassName('fortune')[0].innerHTML = item.fortune
+		footer.getElementsByClassName('greeting')[0].innerHTML = `${item.greetings.firstLine} ${item.greetings.secondLine}`
+	})
+}
+
+const squarePost = () => {
+	const dateFormat = utc => {
+		let date = new Date(utc)
+		return `${date.getMonth() + 1}/${date.getDate()}`
+	}
+
+	const randomChoice = array => array[Math.floor(Math.random() * array.length)]
+	const topics = [
+		'5618c159add4471100150637', // 浴室沉思
+		'557ed045e4b0a573eb66b751', // 无用但有趣的冷知识
+		'5a82a88df0eddb00179c1df7', // 今日烂梗
+		'572c4e31d9595811007a0b6b', // 弱智金句病友会
+		'56d177a27cb3331100465f72', // 今日金句
+		'5aa21c7ae54af10017dc93f8', // 一个想法不一定对
+		'5bf22b38ffa4f00017e1a8ff', // 有一点哲学在里面
+	]
+
+	return request(
+		'POST', 'https://app.jike.ruguoapp.com/1.0/squarePosts/list', 
+		{'content-type': 'application/json'}, 
+		JSON.stringify({topicId: randomChoice(topics), limit: 20})
+	)
+	.then(body => JSON.parse(body))
+	.then(body => body.data.filter(message => message.content && message.content.length <= 100 && (message.content.match(/\n/g) || []).length <= 6))
+	.then(data => randomChoice(data))
+	.then(item => {
+		console.log(item)
+
+		let post = document.getElementsByClassName('post')[0]
+		document.getElementsByClassName('theme')[0].innerHTML = item.topic.content
+		document.getElementsByClassName('text')[0].innerHTML = item.content.replace(/\n/g, '<br>')
+		post.getElementsByClassName('author')[0].innerHTML = item.user.screenName
+		post.getElementsByClassName('date')[0].innerHTML = dateFormat(item.createdAt)
+	})
+}
+
+Promise.all([squarePost(), dailyCard()])
+
+
+
+
+
+
+
+dailyCard().then(e => e)
