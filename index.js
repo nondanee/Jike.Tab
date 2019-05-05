@@ -17,6 +17,19 @@ const request = (method, url, headers, body) => new Promise((resolve, reject) =>
 	xhr.send(body)
 })
 
+const cache = {
+	set: (key, value, live = 5 * 60 * 1000) => localStorage.setItem(key, JSON.stringify({value, expiration: Date.now() + live})),
+	get: key => {
+		try{
+			let item = JSON.parse(localStorage.getItem(key))
+			return (item.expiration > Date.now() ? item.value : null)
+		}
+		catch(e){
+			return null
+		}
+	}
+}
+
 const getToken = () => new Promise(resolve => {
 	const onMessage = message => {
 		chrome.runtime.onMessage.removeListener(onMessage)
@@ -31,26 +44,31 @@ const refreshToken = () => new Promise(resolve => {
 	iframe.src = 'https://web.okjike.com/feed'
 	iframe.style.display = 'none'
 	document.body.appendChild(iframe)
-	iframe.onload = () => {
-		iframe.parentNode.removeChild(iframe)
-		resolve()
-	}
+	iframe.onload = () => 
+		setTimeout(() => {
+			iframe.parentNode.removeChild(iframe)
+			resolve()
+		}, 1500)
 }).then(getToken)
 
 const dailyCard = () => {
 	const query = token => request('GET', 'https://app.jike.ruguoapp.com/1.0/dailyCards/list', {'x-jike-access-token': token})
-	return Promise.resolve()
-	.then(() => getToken().then(query))
-	.catch(() => refreshToken().then(query))
-	.then(body => JSON.parse(body))
-	.then(body => body.data.cards[0])
+	const remote = () => 
+		Promise.resolve()
+		.then(() => getToken().then(query))
+		.catch(() => refreshToken().then(query))
+		.then(body => JSON.parse(body))
+		.then(body => body.data.cards[0])
+		.then(item => cache.set('calendar', item) || item)
+	
+	return Promise.resolve(cache.get('calendar') || remote())
 	.then(item => {
 		console.log(item)
 
 		let footer = document.getElementsByClassName('footer')[0]
 		footer.getElementsByClassName('date')[0].innerHTML = item.date.replace(/-0*/g, '/')
 		footer.getElementsByClassName('fortune')[0].innerHTML = item.fortune
-		footer.getElementsByClassName('greeting')[0].innerHTML = `${item.greetings.firstLine} ${item.greetings.secondLine}`
+		footer.getElementsByClassName('greeting')[0].innerHTML = `${item.greetings.firstLine.replace(/！|。/g, '')}！${item.greetings.secondLine}`
 	})
 }
 
@@ -60,7 +78,7 @@ const squarePost = () => {
 		return `${date.getMonth() + 1}/${date.getDate()}`
 	}
 
-	const randomChoice = array => array[Math.floor(Math.random() * array.length)]
+	const randomSelect = array => array[Math.floor(Math.random() * array.length)]
 	const topics = [
 		'5618c159add4471100150637', // 浴室沉思
 		'557ed045e4b0a573eb66b751', // 无用但有趣的冷知识
@@ -74,11 +92,11 @@ const squarePost = () => {
 	return request(
 		'POST', 'https://app.jike.ruguoapp.com/1.0/squarePosts/list', 
 		{'content-type': 'application/json'}, 
-		JSON.stringify({topicId: randomChoice(topics), limit: 20})
+		JSON.stringify({topicId: randomSelect(topics), limit: 20})
 	)
 	.then(body => JSON.parse(body))
 	.then(body => body.data.filter(message => message.content && message.content.length <= 100 && (message.content.match(/\n/g) || []).length <= 5))
-	.then(data => randomChoice(data))
+	.then(data => randomSelect(data))
 	.then(item => {
 		console.log(item)
 
