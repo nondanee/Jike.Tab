@@ -1,6 +1,6 @@
 # Jike.Tab
 
-Ⓙ Chrome 的新建标签页扩展，精选即友 UGC
+Ⓙ 新标签页扩展，精选即友 UGC
 
 ![image](https://user-images.githubusercontent.com/26399680/57193490-42d74280-6f6e-11e9-9d8b-89c7181c8e97.png)
 
