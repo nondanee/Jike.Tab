@@ -1,5 +1,5 @@
 let token = null
-const self = 'pkomghbfhggjjkoodlpadppdbkcmahhn'
+const self = chrome.runtime.id
 
 chrome.webRequest.onBeforeSendHeaders.addListener(details => {
 	let target = details.requestHeaders.find(header => header.name.toLowerCase() === 'x-jike-access-token')
