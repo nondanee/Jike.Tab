@@ -15,7 +15,7 @@ chrome.webRequest.onHeadersReceived.addListener(details => {
 	return {responseHeaders: headers}
 }, {urls: ['*://web.okjike.com/*'], types: ['sub_frame']}, ['blocking', 'responseHeaders'])
 
-chrome.runtime.onMessage.addListener((message, sender) => {
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 	if(sender.id != self) return
-	if(message.call === 'token') chrome.tabs.sendMessage(sender.tab.id, {token})
+	if(message.call === 'token') return sendResponse({token})
 })

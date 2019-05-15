@@ -9,7 +9,7 @@ const request = (method, url, headers, body) => new Promise((resolve, reject) =>
 	const xhr = new XMLHttpRequest()
 	xhr.onreadystatechange = () => {
 		if(xhr.readyState == 4){
-			xhr.status == 200 ? resolve(xhr.responseText) : reject(xhr.status)				
+			xhr.status == 200 ? resolve(xhr.responseText) : reject(xhr.status)
 		}
 	}
 	xhr.open(method, url, true)
@@ -30,26 +30,19 @@ const cache = {
 	}
 }
 
-const getToken = () => new Promise(resolve => {
-	const onMessage = message => {
-		chrome.runtime.onMessage.removeListener(onMessage)
-		resolve(message.token)
-	}
-	chrome.runtime.sendMessage({call: 'token'})
-	chrome.runtime.onMessage.addListener(onMessage)
-}).then(token => token || refreshToken())
+const getToken = () =>
+	new Promise(resolve => chrome.runtime.sendMessage({call: 'token'}, response => resolve((response || {}).token)))
+	.then(token => token || refreshToken())
 
-const refreshToken = () => new Promise(resolve => {
-	const iframe = createElement('iframe')
-	iframe.src = 'https://web.okjike.com/feed'
-	iframe.style.display = 'none'
-	document.body.appendChild(iframe)
-	iframe.onload = () => 
-		setTimeout(() => {
-			iframe.parentNode.removeChild(iframe)
-			resolve()
-		}, 1500)
-}).then(getToken)
+const refreshToken = () =>
+	new Promise(resolve => {
+		const iframe = createElement('iframe')
+		iframe.src = 'https://web.okjike.com/feed'
+		iframe.style.display = 'none'
+		document.body.appendChild(iframe)
+		iframe.onload = () => setTimeout(() => resolve(iframe.parentNode.removeChild(iframe)), 1500)
+	})
+	.then(getToken)
 
 const dailyCard = () => {
 	const query = token => request('GET', 'https://app.jike.ruguoapp.com/1.0/dailyCards/list', {'x-jike-access-token': token})
@@ -60,7 +53,7 @@ const dailyCard = () => {
 		.then(body => JSON.parse(body))
 		.then(body => body.data.cards[0])
 		.then(item => cache.set('calendar', item) || item)
-	
+
 	return Promise.resolve(cache.get('calendar') || remote())
 	.then(item => {
 		console.log(item)
