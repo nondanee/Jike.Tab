@@ -2,7 +2,7 @@
 
 Ⓙ 新标签页扩展，精选即友 UGC
 
-![](https://user-images.githubusercontent.com/26399680/59157848-7ca6e600-8ae4-11e9-9607-c6c34d885f77.png)
+![](https://user-images.githubusercontent.com/26399680/59157918-d3f98600-8ae5-11e9-9adf-2b5ce4c24813.png)
 
 ## About
 
