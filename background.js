@@ -14,7 +14,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(details => {
 
 chrome.webRequest.onHeadersReceived.addListener(details => {
 	let headers = details.responseHeaders
-	if(details.initiator == `chrome-extension://${self}`){
+	if((details.initiator || details.documentUrl).startsWith(chrome.extension.getURL('').slice(0, -1))){
 		let index = headers.findIndex(header => header.name.toLowerCase() === 'x-frame-options')
 		if(index != -1) headers.splice(index, 1)
 	}
