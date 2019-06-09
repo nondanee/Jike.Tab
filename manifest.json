@@ -1,6 +1,6 @@
 {
 	"name": "Jike.Tab",
-	"description": "Override the new tab page with a blank one",
+	"description": "New Tab Page for Jike.APP",
 	"version": "0.2",
 	"chrome_url_overrides": {
 		"newtab": "index.html"

@@ -5,17 +5,17 @@ const createElement = (tagName, className, innerHTML) => {
 	return element
 }
 
-const request = (method, url, headers, body) => new Promise((resolve, reject) => {
-	const xhr = new XMLHttpRequest()
-	xhr.onreadystatechange = () => {
-		if(xhr.readyState == 4){
-			xhr.status == 200 ? resolve(xhr.responseText) : reject(xhr.status)
-		}
-	}
-	xhr.open(method, url, true)
-	Object.keys(headers).forEach(key => xhr.setRequestHeader(key, headers[key]))
-	xhr.send(body)
-})
+// const request = (method, url, headers, body) => new Promise((resolve, reject) => {
+// 	const xhr = new XMLHttpRequest()
+// 	xhr.onreadystatechange = () => {
+// 		if(xhr.readyState == 4){
+// 			xhr.status == 200 ? resolve(xhr.responseText) : reject(xhr.status)
+// 		}
+// 	}
+// 	xhr.open(method, url, true)
+// 	Object.keys(headers).forEach(key => xhr.setRequestHeader(key, headers[key]))
+// 	xhr.send(body)
+// })
 
 const cache = {
 	set: (key, value, live = 5 * 60 * 1000) => localStorage.setItem(key, JSON.stringify({value, expiration: Date.now() + live})),
@@ -30,31 +30,15 @@ const cache = {
 	}
 }
 
-const getToken = () =>
-	new Promise(resolve => chrome.runtime.sendMessage({call: 'token'}, response => resolve((response || {}).token)))
-	.then(token => token || refreshToken())
-
-const refreshToken = () =>
-	new Promise(resolve => {
-		const iframe = createElement('iframe')
-		iframe.src = 'https://web.okjike.com/feed'
-		iframe.style.display = 'none'
-		document.body.appendChild(iframe)
-		iframe.onload = () => setTimeout(() => resolve(iframe.parentNode.removeChild(iframe)), 1500)
-	})
-	.then(getToken)
+const jikeRemote = (...payload) => new Promise(resolve => chrome.runtime.sendMessage({call: 'jikeQuery', payload}, response => resolve(response)))
 
 const dailyCard = () => {
-	const query = token => request('GET', 'https://app.jike.ruguoapp.com/1.0/dailyCards/list', {'x-jike-access-token': token})
-	const remote = () => 
-		Promise.resolve()
-		.then(() => getToken().then(query))
-		.catch(() => refreshToken().then(query))
-		.then(body => JSON.parse(body))
+	const query = () => 
+		jikeRemote('GET', '1.0/dailyCards/list')
 		.then(body => body.data.cards[0])
 		.then(item => cache.set('calendar', item) || item)
 
-	return Promise.resolve(cache.get('calendar') || remote())
+	return Promise.resolve(cache.get('calendar') || query())
 	.then(item => {
 		console.log(item)
 
@@ -82,12 +66,7 @@ const squarePost = () => {
 		'5bf22b38ffa4f00017e1a8ff', // 有一点哲学在里面
 	]
 
-	return request(
-		'POST', 'https://app.jike.ruguoapp.com/1.0/squarePosts/list', 
-		{'content-type': 'application/json'}, 
-		JSON.stringify({topicId: randomSelect(topics), limit: 20})
-	)
-	.then(body => JSON.parse(body))
+	return jikeRemote('POST', '1.0/squarePosts/list', {topicId: randomSelect(topics), limit: 20})
 	.then(body => body.data.filter(message => message.content && message.content.length <= 100 && (message.content.match(/\n/g) || []).length <= 5))
 	.then(data => randomSelect(data))
 	.then(item => {

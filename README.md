@@ -2,16 +2,15 @@
 
 Ⓙ 新标签页扩展，精选即友 UGC
 
-![image](https://user-images.githubusercontent.com/26399680/57193490-42d74280-6f6e-11e9-9d8b-89c7181c8e97.png)
-
+![](https://user-images.githubusercontent.com/26399680/59157848-7ca6e600-8ae4-11e9-9607-c6c34d885f77.png)
 
 ## About
 
 个人感觉 new tab page 非常适合做周边，安装简单、存在感又强、热更新加彩蛋也方便，满满社区归属感，不过一直没人做。
 
-后来才意识到其实大部分人还是在用 infinite 之类的 speed dial 页，翻掘金插件的评论也发现有挺多人反感占用新标签页的，不像我只用 ntp 看风景看时间。
+后来才意识到其实大部分人还是在用 [infinite](https://chrome.google.com/webstore/detail/nnnkddnnlpamobajfibfdgfnbcnkgngh) 之类的 speed dial 页，翻[掘金插件](https://chrome.google.com/webstore/detail/lecdifefmmfjnjjinhaennhdlmcaeeeb)的评论也发现有挺多人反感占用新标签页的，不像我只用 ntp 看风景看时间。
 
-曾今用过很长一段时间 Anyway.Tab，虽然已经不怎么听了，官网什么时候有广告位的我都不知道。但是现在再装回插件，还是会有之前的感觉，尽管自己已经离设计方向越来越远了。
+曾今用过很长一段时间 [Anyway.Tab](https://chrome.google.com/webstore/detail/jaoejhbbokpmbndhdopikidehkadhake)，虽然已经不怎么听了，官网什么时候有广告位的我都不知道。但是现在再装回插件，还是会有之前的感觉，尽管自己已经离设计方向越来越远了。
 
 所以，不管别人用不用，我还是选择做。
 
@@ -36,7 +35,7 @@
 - [Dawninest/jikeCalendar-macOS](https://github.com/Dawninest/jikeCalendar-macOS)
 - [Anyway-Design/Anyway.Tab](https://github.com/Anyway-Design/Anyway.Tab)
 
-## Thank
+## Credit
 
 即刻 APP 和全体即友
 
