@@ -49,6 +49,25 @@ const dailyCard = () => {
 	})
 }
 
+const userProfile = () => {
+	const query = () => 
+		jikeRemote('GET', '1.0/users/profile')
+		.then(body => body.user)
+		.then(item => cache.set('profile', item, 60 * 60 * 1000) || item)
+
+	return Promise.resolve(cache.get('profile') || query())
+	.then(item => {
+		console.log(item)
+		let now = new Date()
+		let join = new Date(item.createdAt)
+
+		let footer = document.getElementsByClassName('footer')[0]
+		footer.getElementsByClassName('date')[0].innerHTML = `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()}`
+		footer.getElementsByClassName('fortune')[0].innerHTML = now.getDay() === 5 ? '今天周五！' : '不是周五'
+		footer.getElementsByClassName('greeting')[0].innerHTML = `Hi，${item.username}！今天是你来即刻社区的第 ${Math.round((now - join) / 86400000)} 天`
+	})
+}
+
 const squarePost = () => {
 	const dateFormat = utc => {
 		let date = new Date(utc)
@@ -80,4 +99,4 @@ const squarePost = () => {
 	})
 }
 
-Promise.all([squarePost(), dailyCard()])
+Promise.all([squarePost(), userProfile()])
