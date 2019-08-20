@@ -14,5 +14,5 @@
 		"scripts": ["background.js"]
 	},
 	"manifest_version": 2,
-	"permissions": ["*://app.jike.ruguoapp.com/*", "*://web.okjike.com/*", "webRequest", "webRequestBlocking"]
+	"permissions": ["*://app.jike.ruguoapp.com/*", "*://web.okjike.com/*", "*://api.jellow.club/*", "webRequest", "webRequestBlocking"]
 }

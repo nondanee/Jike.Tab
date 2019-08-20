@@ -50,18 +50,18 @@ const refresh = () =>
 		iframe.src = 'https://web.okjike.com/feed'
 		iframe.style.display = 'none'
 		document.body.appendChild(iframe)
-		iframe.onload = () => setTimeout(() => resolve(iframe.parentNode.removeChild(iframe)), 5000)
+		iframe.onload = () => setTimeout(() => /*resolve*/(iframe.parentNode.removeChild(iframe)), 5000)
 	}).then(() => pending = null))
 
 const jikeQuery = (method, path, data) => {
 	const headers = {
-		'platform': 'web',
-		'app-version': '5.3.0',
+		// 'platform': 'web',
+		// 'app-version': '5.3.0',
 		'accept': 'application/json',
 		'content-type': 'application/json',
 		'x-jike-access-token': token
 	}
-	return request(method, `https://app.jike.ruguoapp.com/${path}`, headers, JSON.stringify(data))
+	return request(method, `https://api.jellow.club/${path}`, headers, JSON.stringify(data))
 	.then(response =>
 		response.status === 401 ? refresh().then(() => jikeQuery(method, path, data)) : JSON.parse(response.responseText)
 	)

@@ -85,7 +85,7 @@ const squarePost = () => {
 		'5bf22b38ffa4f00017e1a8ff', // 有一点哲学在里面
 	]
 
-	return jikeRemote('POST', '1.0/squarePosts/list', {topicId: randomSelect(topics), limit: 20})
+	return jikeRemote('POST', '1.0/topicFeed/list', {topicId: randomSelect(topics), limit: 20})
 	.then(body => body.data.filter(message => message.content && message.content.length <= 100 && (message.content.match(/\n/g) || []).length <= 5))
 	.then(data => randomSelect(data))
 	.then(item => {
