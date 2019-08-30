@@ -5,18 +5,6 @@ const createElement = (tagName, className, innerHTML) => {
 	return element
 }
 
-// const request = (method, url, headers, body) => new Promise((resolve, reject) => {
-// 	const xhr = new XMLHttpRequest()
-// 	xhr.onreadystatechange = () => {
-// 		if(xhr.readyState == 4){
-// 			xhr.status == 200 ? resolve(xhr.responseText) : reject(xhr.status)
-// 		}
-// 	}
-// 	xhr.open(method, url, true)
-// 	Object.keys(headers).forEach(key => xhr.setRequestHeader(key, headers[key]))
-// 	xhr.send(body)
-// })
-
 const cache = {
 	set: (key, value, live = 5 * 60 * 1000) => localStorage.setItem(key, JSON.stringify({value, expiration: Date.now() + live})),
 	get: key => {
@@ -62,9 +50,9 @@ const userProfile = () => {
 		let join = new Date(item.createdAt)
 
 		let footer = document.getElementsByClassName('footer')[0]
-		footer.getElementsByClassName('date')[0].innerHTML = `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()}`
-		footer.getElementsByClassName('fortune')[0].innerHTML = now.getDay() === 5 ? '今天周五！' : '不是周五'
-		footer.getElementsByClassName('greeting')[0].innerHTML = `Hi，${item.username}！今天是你来即刻社区的第 ${Math.round((now - join) / 86400000)} 天`
+		footer.getElementsByClassName('date')[0].textContent = `${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()}`
+		footer.getElementsByClassName('fortune')[0].textContent = now.getDay() === 5 ? '今天周五！' : '不是周五'
+		footer.getElementsByClassName('greeting')[0].textContent = `Hi，${item.username}！今天是你来即刻社区的第 ${Math.round((now - join) / 86400000)} 天`
 	})
 }
 
@@ -92,10 +80,10 @@ const squarePost = () => {
 		console.log(item)
 
 		let post = document.getElementsByClassName('post')[0]
-		document.getElementsByClassName('theme')[0].innerHTML = item.topic.content
+		document.getElementsByClassName('theme')[0].textContent = item.topic.content
 		document.getElementsByClassName('text')[0].innerHTML = item.content.replace(/\n/g, '<br>')
-		post.getElementsByClassName('author')[0].innerHTML = item.user.screenName
-		post.getElementsByClassName('date')[0].innerHTML = dateFormat(item.createdAt)
+		post.getElementsByClassName('author')[0].textContent = item.user.screenName
+		post.getElementsByClassName('date')[0].textContent = dateFormat(item.createdAt)
 	})
 }
 

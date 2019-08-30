@@ -27,17 +27,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 	return true
 })
 
-const request = (method, url, headers, body) => new Promise((resolve, reject) => {
-	const xhr = new XMLHttpRequest()
-	xhr.onreadystatechange = () => {if(xhr.readyState == 4) resolve(xhr)}
-	xhr.onerror = error => reject(error)
-	xhr.open(method, url, true)
-	Object.keys(headers)
-	.filter(key => !['origin', 'referer'].includes(key.toLowerCase()) && headers[key])
-	.forEach(key => xhr.setRequestHeader(key, headers[key]))
-	xhr.send(body)
-})
-
 let pending = null
 const refresh = () => 
 	pending || (pending = new Promise(resolve => {
@@ -61,8 +50,8 @@ const jikeQuery = (method, path, data) => {
 		'content-type': 'application/json',
 		'x-jike-access-token': token
 	}
-	return request(method, `https://api.jellow.club/${path}`, headers, JSON.stringify(data))
+	return fetch(`https://api.jellow.club/${path}`, {method, headers, body: JSON.stringify(data)})
 	.then(response =>
-		response.status === 401 ? refresh().then(() => jikeQuery(method, path, data)) : JSON.parse(response.responseText)
+		response.status === 401 ? refresh().then(() => jikeQuery(method, path, data)) : response.json()
 	)
 }
