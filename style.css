@@ -62,7 +62,7 @@ body{
 	display: inline-flex;
 	align-items: center;
 	cursor: pointer;
-	transition: all 0.2s linear;
+	/*transition: all 0.2s linear;*/
 	user-select: none;
 }
 .main .content .theme::before{
